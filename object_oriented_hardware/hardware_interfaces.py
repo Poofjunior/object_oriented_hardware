@@ -17,10 +17,10 @@ class DigitalInputInterface(HardwareInterface, metaclass=abc.ABCMeta):
         if self.simulated:
             return self.simulated_input
         else:
-            return self.__read()
+            return self._read()
 
     @abc.abstractmethod
-    def __read(self):
+    def _read(self):
         """
         Performs the actual read from the hardware. Implementation is hardware-specific.
         """
@@ -38,10 +38,10 @@ class AnalogInputInterface(HardwareInterface, metaclass=abc.ABCMeta):
         if self.simulated:
             return self.simulated_input
         else:
-            return self.__read()
+            return self._read()
 
     @abc.abstractmethod
-    def __read(self):
+    def _read(self):
         """
         Performs the actual read from the hardware. Implementation is hardware-specific.
         """
@@ -51,7 +51,7 @@ class AnalogInputInterface(HardwareInterface, metaclass=abc.ABCMeta):
 class VoltageInputInterface(AnalogInputInterface):
 
     @abc.abstractmethod
-    def __read(self):
+    def _read(self):
         """
         returns an analog voltage in volts.
         """
@@ -72,10 +72,10 @@ class DigitalOutputInterface(HardwareInterface, metaclass=abc.ABCMeta):
         if self.simulated:
             self.simulated_output = value
         else:
-            self.__write(value)
+            self._write(value)
 
     @abc.abstractmethod
-    def __write(self, value):
+    def _write(self, value):
         """
         Performs the actual write to hardware. Implementation is hardware-specific.
         """
@@ -96,10 +96,10 @@ class AnalogOutputInterface(HardwareInterface, metaclass=abc.ABCMeta):
         if self.simulated:
             self.simulated_output = value
         else:
-            self.__write(value)
+            self._write(value)
 
     @abc.abstractmethod
-    def __write(self, value):
+    def _write(self, value):
         """
         Performs the actual write to hardware. Implementation is hardware-specific.
         """

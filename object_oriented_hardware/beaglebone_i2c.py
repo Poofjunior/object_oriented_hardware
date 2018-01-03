@@ -37,9 +37,13 @@ class BBI2CBus(metaclass=abc.ABCMeta):
 
     def __init__(self, bus_num):
         # smbus is not provided on all systems, so only import it if we try to instantiate an object.
-        import smbus
-        assert 0 <= bus_num <= 2, "Error, valid i2c buses are only {}.".format([i for i in range(3)])
         self.log = logging.getLogger(__name__)
+        try:
+            import smbus
+        except ImportError:
+            from object_oriented_hardware.stubs import smbus
+            self.log.error("Cannot import smbus; Continuing with a stub.")
+        assert 0 <= bus_num <= 2, "Error, valid i2c buses are only {}.".format([i for i in range(3)])
         self.bus = smbus.SMBus(bus_num)
 
     @abc.abstractmethod
@@ -113,6 +117,9 @@ class BBI2CBus0(Singleton, BBI2CBus):
         """
         super().__init__(bus_num=0)
         self.bus_lock = threading.RLock()
+
+    def __init__(self):
+        pass
 
     def _get_lock(self):
         """

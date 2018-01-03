@@ -317,8 +317,8 @@ class ADS1x15(object):
 class ADS1115(ADS1x15):
     """ADS1115 16-bit analog to digital converter instance."""
 
-    def __init__(self, *args, **kwargs):
-        super(ADS1115, self).__init__(*args, **kwargs)
+    def __init__(self, i2c_interface, *args, **kwargs):
+        super().__init__(i2c_interface, *args, **kwargs)
 
     def _data_rate_default(self):
         # Default from datasheet page 16, config register DR bit default.
@@ -341,8 +341,8 @@ class ADS1115(ADS1x15):
 class ADS1015(ADS1x15):
     """ADS1015 12-bit analog to digital converter instance."""
 
-    def __init__(self, *args, **kwargs):
-        super(ADS1015, self).__init__(*args, **kwargs)
+    def __init__(self, i2c_interface, *args, **kwargs):
+        super().__init__(i2c_interface, *args, **kwargs)
 
     def _data_rate_default(self):
         # Default from datasheet page 19, config register DR bit default.
@@ -368,6 +368,6 @@ class ADS1x15VoltageInputInterface(VoltageInputInterface):
         self.ads1x15 = ads1x15
         self.channel_index = channel_index
 
-    def __read(self):
-        return self.read_adc(self.channel_index)
+    def _read(self):
+        return self.ads1x15.read_adc(self.channel_index)
 
