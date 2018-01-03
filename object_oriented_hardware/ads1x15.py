@@ -31,7 +31,7 @@ ADS1x15_POINTER_LOW_THRESHOLD  = 0x02
 ADS1x15_POINTER_HIGH_THRESHOLD = 0x03
 ADS1x15_CONFIG_OS_SINGLE       = 0x8000
 ADS1x15_CONFIG_MUX_OFFSET      = 12
-# Maping of gain values to config register values.
+# Mapping of gain values to config register values.
 ADS1x15_CONFIG_GAIN = {
     2/3: 0x0000,
     1:   0x0200,
@@ -362,12 +362,27 @@ class ADS1015(ADS1x15):
         return value
 
 
-class ADS1x15VoltageInputInterface(VoltageInputInterface):
+class ADS1015VoltageInputInterface(VoltageInputInterface):
 
-    def __init__(self, ads1x15, channel_index):
-        self.ads1x15 = ads1x15
+    # Gain to Volts-per-bit conversion from From datasheet Table 1
+    volts_per_bit= \
+    {
+        2/3: 0.003,
+        1: 0.002,
+        2: 0.001,
+        4: 0.5,
+        8: 0.25,
+        16: 0.125
+    }
+
+    def __init__(self, ads1x15, channel_index, gain=2/3):
+        super().__init__()
+        self.ads1015 = ads1x15
+        self.gain = gain
         self.channel_index = channel_index
+        self.ads1015.start_adc(channel_index, gain)
 
     def _read(self):
-        return self.ads1x15.read_adc(self.channel_index)
+        raw_bits = self.ads1015.get_last_result()
+        return raw_bits * self.__class__.volts_per_bit[self.gain]
 

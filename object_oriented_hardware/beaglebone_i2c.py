@@ -20,10 +20,10 @@ def retry_on_fail(func):
                 with self._get_lock():
                     return func(self, *args, **kwargs)
                 break
-            except:
+            except OSError:
                 num_tries += 1
                 if num_tries < 3:
-                    self.log.warning("Exception occurred performing an I2C {} on bus {}. Retrying."
+                    self.log.warning("Remote IO Error occurred performing an I2C {} on bus {}. Retrying."
                                      .format(func.__name__, self.bus_num))
                 else:
                     self.log.warning("Giving up after {} attempts!".format(num_tries))
@@ -44,6 +44,7 @@ class BBI2CBus(metaclass=abc.ABCMeta):
             from object_oriented_hardware.stubs import smbus
             self.log.error("Cannot import smbus; Continuing with a stub.")
         assert 0 <= bus_num <= 2, "Error, valid i2c buses are only {}.".format([i for i in range(3)])
+        self.bus_num = bus_num
         self.bus = smbus.SMBus(bus_num)
 
     @abc.abstractmethod
@@ -119,8 +120,8 @@ class BBI2CBus0(Singleton, BBI2CBus):
         self.bus_lock = threading.RLock()
 
     def __init__(self):
-		# Don't define anything as it will be called by the constructor every time
-		# BBI2CBus0 is instantiated. Rather, use the init function.
+        # Don't define anything as it will be called by the constructor every time
+        # BBI2CBus0 is instantiated. Rather, use the init function.
         pass
 
     def _get_lock(self):
@@ -142,8 +143,8 @@ class BBI2CBus1(Singleton, BBI2CBus):
         self.bus_lock = threading.RLock()
 
     def __init__(self):
-		# Don't define anything as it will be called by the constructor every time
-		# BBI2CBus1 is instantiated. Rather, use the init function.
+        # Don't define anything as it will be called by the constructor every time
+        # BBI2CBus1 is instantiated. Rather, use the init function.
         pass
 
     def _get_lock(self):
@@ -166,8 +167,8 @@ class BBI2CBus2(Singleton, BBI2CBus):
         self.bus_lock = threading.RLock()
 
     def __init__(self):
-		# Don't define anything as it will be called by the constructor every time
-		# BBI2CBus2 is instantiated. Rather, use the init function.
+        # Don't define anything as it will be called by the constructor every time
+        # BBI2CBus2 is instantiated. Rather, use the init function.
         pass
 
     def _get_lock(self):
