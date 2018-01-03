@@ -119,6 +119,8 @@ class BBI2CBus0(Singleton, BBI2CBus):
         self.bus_lock = threading.RLock()
 
     def __init__(self):
+		# Don't define anything as it will be called by the constructor every time
+		# BBI2CBus0 is instantiated. Rather, use the init function.
         pass
 
     def _get_lock(self):
@@ -139,6 +141,11 @@ class BBI2CBus1(Singleton, BBI2CBus):
         super().__init__(bus_num=1)
         self.bus_lock = threading.RLock()
 
+    def __init__(self):
+		# Don't define anything as it will be called by the constructor every time
+		# BBI2CBus1 is instantiated. Rather, use the init function.
+        pass
+
     def _get_lock(self):
         """
         returns a re-entrant thread lock for the bus number.
@@ -157,6 +164,11 @@ class BBI2CBus2(Singleton, BBI2CBus):
         """
         super().__init__(bus_num=2)
         self.bus_lock = threading.RLock()
+
+    def __init__(self):
+		# Don't define anything as it will be called by the constructor every time
+		# BBI2CBus2 is instantiated. Rather, use the init function.
+        pass
 
     def _get_lock(self):
         """
