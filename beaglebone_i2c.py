@@ -6,7 +6,6 @@ Provides BBI2CBus0, BBI2CBus1, and BBI2CBus2 as singleton objects for reading a 
 import abc
 import logging
 import threading
-import smbus
 from .singleton import Singleton
 
 
@@ -37,6 +36,8 @@ class BBI2CBus(metaclass=abc.ABCMeta):
     DEBUG = False # Set to True for more verbose i2c chatter.
 
     def __init__(self, bus_num):
+        # smbus is not provided on all systems, so only import it if we try to instantiate an object.
+        import smbus
         assert 0 <= bus_num <= 2, "Error, valid i2c buses are only {}.".format([i for i in range(3)])
         self.log = logging.getLogger(__name__)
         self.bus = smbus.SMBus(bus_num)
