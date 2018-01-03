@@ -107,11 +107,11 @@ class BBI2CBus0(Singleton, BBI2CBus):
     A singleton class for the Beaglebone I2C Bus number 0
     """
 
-    def init(self, bus_num):
+    def init(self):
         """
         Singleton class requires us to write an init instead of an __init__
         """
-        super().__init__(bus_num)
+        super().__init__(bus_num=0)
         self.bus_lock = threading.RLock()
 
     def _get_lock(self):
@@ -125,11 +125,11 @@ class BBI2CBus1(Singleton, BBI2CBus):
     A singleton class for the Beaglebone I2C Bus number 1
     """
 
-    def init(self, bus_num):
+    def init(self):
         """
         Singleton class requires us to write an init instead of an __init__
         """
-        super().__init__(bus_num)
+        super().__init__(bus_num=1)
         self.bus_lock = threading.RLock()
 
     def _get_lock(self):
@@ -144,11 +144,11 @@ class BBI2CBus2(Singleton, BBI2CBus):
     A singleton class for the Beaglebone I2C Bus number 2
     """
 
-    def init(self, bus_num):
+    def init(self):
         """
         Singleton class requires us to write an init instead of an __init__
         """
-        super().__init__(bus_num)
+        super().__init__(bus_num=2)
         self.bus_lock = threading.RLock()
 
     def _get_lock(self):

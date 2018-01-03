@@ -81,7 +81,7 @@ class AnalogTemperatureSensor(TemperatureSensor):
     a linear analog-output-based temperature sensor.
     """
 
-    def __init__(self, v1_v, t1_c, v2_v, t2_c, voltage_input_interface):
+    def __init__(self, voltage_input_interface, v1_v, t1_c, v2_v, t2_c):
         """
         Establishing the voltage-to-pressure measurement requires two datapoints:
         (v1_v, t1_c) and (v2_v, t2_c), which can be derived from the sensor specs.
@@ -112,4 +112,10 @@ class AnalogTemperatureSensor(TemperatureSensor):
         Note: implements abstract base class read_temperature_k
         """
         return self.read_temperature_c() + TemperatureSensor.ABSOLUTE_ZERO_OFFSET_C
+
+
+class AD8495TCAmplifier(AnalogTemperatureSensor):
+
+    def __init__(self, voltage_input_interface, v1_v=1.25, t1_c=0.0, v2_v=1.5, t2_c=50):
+        super().__init__(voltage_input_interface, v1_v, t1_c, v2_v, t2_c)
 

@@ -33,7 +33,7 @@ class AnalogInputInterface(HardwareInterface, metaclass=abc.ABCMeta):
 
     def read(self):
         """
-        returns the analog value. Units are impolementation-specific.
+        returns the analog value. Units are implementation-specific.
         """
         if self.simulated:
             return self.simulated_input

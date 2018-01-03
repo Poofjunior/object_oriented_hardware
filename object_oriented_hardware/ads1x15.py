@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Copyright (c) 2016 Adafruit Industries
 # Author: Tony DiCola
 #
@@ -19,6 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 import time
+from object_oriented_hardware.hardware_interfaces import VoltageInputInterface
 
 
 # Register and other configuration values:
@@ -75,7 +77,7 @@ ADS1x15_CONFIG_COMP_QUE_DISABLE = 0x0003
 class ADS1x15(object):
     """Base functionality for ADS1x15 analog to digital converters."""
 
-    def __init__(self, address=ADS1x15_DEFAULT_ADDRESS, i2c_interface):
+    def __init__(self, i2c_interface, address=ADS1x15_DEFAULT_ADDRESS):
         self.address = address
         self.i2c = i2c_interface
 
@@ -358,3 +360,14 @@ class ADS1015(ADS1x15):
         if value & 0x800 != 0:
             value -= 1 << 12
         return value
+
+
+class ADS1x15VoltageInputInterface(VoltageInputInterface):
+
+    def __init__(self, ads1x15, channel_index):
+        self.ads1x15 = ads1x15
+        self.channel_index = channel_index
+
+    def __read(self):
+        return self.read_adc(self.channel_index)
+
