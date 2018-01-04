@@ -41,24 +41,22 @@ class Thermistor(TemperatureSensor):
           a supplementary pulldown resistor added. Pullup value must be provided on init.
     """
 
-    def __init__(self, a, b, c, r2_ohms, vin_v, voltage_input_interface):
+    def __init__(self, voltage_input_interface, b=3950, thermistor_ohms=10000,
+                 r2_ohms=10000, vin_v=5.0):
         """
         Initialize a Thermistor in voltage divider configuration.
         Note: thermistor is set as the pullup resistor in the voltage divider.
 
-        :param a: Steinhart–Hart equation constant A
-        :param b: Steinhart–Hart equation constant B
-        :param c: Steinhart–Hart equation constant C
+        :param b: simplified Steinhart–Hart equation constant B
         :param r2_ohms: pulldown resistor resistance in ohms
         :param vin_v: resistor divider input voltage in volts
         :param voltage_input_interface: analog input where the voltage-divider input will be measured
         """
-        self.a = a
         self.b = b
-        self.c = c
+        self.thermistor_ohms = thermistor_ohms
         self.r2_ohms = r2_ohms
         self.vin_v = vin_v
-        self.analog_input = voltage_input_interface
+        self.voltage_input = voltage_input_interface
 
     def _read_resistance(self, voltage_v):
         """
@@ -71,9 +69,9 @@ class Thermistor(TemperatureSensor):
         returns the temperature in Kelvin
         Note: implements abstract base class read_temperature_k
         """
-        voltage_v = self.analog_input.read()
+        voltage_v = self.voltage_input.read()
         r1_ohms = self._read_resistance(voltage_v)
-        return 1.0/(self.a + self.b * log(r1_ohms) + self.c * log(r1_ohms)**3)
+        return (1/298.15 + 1/self.b * log(r1_ohms/self.thermistor_ohms))**(-1)
 
 
 class AnalogTemperatureSensor(TemperatureSensor):
@@ -96,14 +94,14 @@ class AnalogTemperatureSensor(TemperatureSensor):
         # generate slop and y-intercept for line formula based on two data points:
         self.gain = (t1_c - t2_c)/(v1_v - v2_v)
         self.offset = self.gain * (0 - v1_v) + t1_c
-        self.analog_input = voltage_input_interface
+        self.voltage_input = voltage_input_interface
 
     def read_temperature_c(self):
         """
         returns the temperature in Celsius.
         Note: overrides base class read_temperature_c
         """
-        voltage_v = self.analog_input.read()
+        voltage_v = self.voltage_input.read()
         return self.gain * voltage_v + self.offset
 
     def read_temperature_k(self):
